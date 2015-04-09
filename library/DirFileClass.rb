@@ -137,6 +137,7 @@ class DirFile
 	#サイズの大きいファイルを読み込む時用
 	def getFileStringEx(fileName,str)
 		array = []
+		array2 = []
 		path = ""
 		if(@path != nil) then
 			path = "#{@path}/"
@@ -145,10 +146,12 @@ class DirFile
 			f.each_line {|line|
 				if(line.include?(str)) then
 					array[array.size()] = line.chomp
+				else
+					array2[array2.size()] = line.chomp
 				end
 			}
 		}
-		return array
+		return array,array2
 	end
 
 	#以降のメッソドはPlayerクラスのオブジェクトのみが呼び出し可能
