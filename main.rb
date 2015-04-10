@@ -16,16 +16,16 @@ def main(fileName)
 	axisIndex = 0
 	freqAThreshold = 500
 	freqBThreshold = 600
-	if(axis=="x") then
-		axisIndex = 1
-	elsif(axis=="y") then
-		axisIndex = 2
-	elsif(axis=="z") then
-    	axisIndex = 3
- 	elsif(axis == "norm") then
-    	axisIndex = 4
-	elsif(axis == "rotate") then
-		axisIndex = 5
+		if(axis=="x") then
+			axisIndex = 1
+		elsif(axis=="y") then
+			axisIndex = 2
+		elsif(axis=="z") then
+		  axisIndex = 3
+		elsif(axis == "norm") then
+		  axisIndex = 4
+		elsif(axis == "rotate") then
+			axisIndex = 5
   	end
   	flio = FileIO.new(fileName)
 	pcaFlg = false
