@@ -114,7 +114,7 @@ class DirFile
 		if(@path != nil) then
 			path = "#{@path}/"
 		end
-		File.open("#{path}fileName",'r') {|f|
+		File.open("#{path}#{fileName}",'r') {|f|
 			f.each_line {|line|
 				array[array.size()] = line.chomp
 			}
@@ -122,12 +122,15 @@ class DirFile
 		return array
 	end
 
-	def writeFile(fileName,array)
+	def writeFile(fileName,array,mode)
 		path = ""
 		if(@path != nil) then
 			path = "#{@path}/"
 		end
-		File.open("#{path}#{fileName}", "w") { |file|
+		if(mode == nil) then
+			mode = 'w'
+		end
+		File.open("#{path}#{fileName}", mode) { |file|
 			for i in 0 .. array.size()-1 do
 				file.write array[i]
 			end
