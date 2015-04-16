@@ -1,0 +1,4 @@
+#targetfile:$(projectRoot)/hascData/result/50cm/pocket/hasc-20150330-105012-mag-pca.csv-lowpass.csv
+1427680221.19,1427680224.31,通過
+1427680221.35,1427680224.15,B
+1427680221.63,1427680224.19,A

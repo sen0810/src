@@ -38,8 +38,8 @@ def main(fileName)
   for v in labels do
     if(labelC[0] <= v[0]) then
       if(labelC[1] > v[0]) then
-        result[result.size] = [v[0],labelC[1],"C"]
         result[result.size] = [labelC[0],v[0],labelC[2]]
+        result[result.size] = [v[0],labelC[1],"C"]
         result[result.size] = [labelC[1],v[1],v[2]]
       else
         result[result.size] = [labelC[0],labelC[1],labelC[2]]
@@ -47,8 +47,8 @@ def main(fileName)
       end
     elsif(labelC[0] > v[0]) then
       if(labelC[0] < v[1]) then
-        result[result.size] = [labelC[0],v[1],"C"]
         result[result.size] = [v[0],labelC[0],v[2]]
+        result[result.size] = [labelC[0],v[1],"C"]
         result[result.size] = [v[1],labelC[1],labelC[2]]
       else
         result[result.size] = [labelC[0],labelC[1],labelC[2]]
