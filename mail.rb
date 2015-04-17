@@ -1,4 +1,5 @@
-#WebAPIを使う
+# encoding: utf-8
+require 'mail'
 require './library/WebAPIController.rb'
 values = [
   ["マヌケなFPSプレイヤーが異世界へ落ちた場合","N4076CM"],
@@ -10,13 +11,11 @@ values = [
   ["ワールド・ティチャー -異世界式教育エージェント","n4237cd"]
 ]
 
-
 ncodes = ""
 for v in values do
   ncodes += v[1] + "-"
 end
 ncodes.slice!(ncodes.length-1, 1)
-#paramas = URI.encode_www_form({})
 api = WebAPIController.new('http://api.syosetu.com/novelapi/api/?of=t-ua&ncode=' + ncodes)
 api.connect()
 str = api.getBody()
@@ -31,39 +30,21 @@ for v in tmp do
   end
 end
 
-#uri = URI.parse()
-=begin
-begin
-  response = Net::HTTP.start(uri.host,uri.port) do |http|
-    http.open_timeout = 5
-    http.read_timeout = 10
-    http.get(uri.request_uri)
+
+
+mail = Mail.new do
+  from "takeshima1092@gmail.com"
+  to "sen@ucl.nuee.nagoya-u.ac.jp"
+  subject "novel update news!!"
+  body "#{body}"
 end
 
-case response
-when Net::HTTPSuccess
-    str = response.body#JSON.parse(response.body)
-    tmp = str.split("\n")
-    for v in tmp do
-      if(v.include?("updated_at")) then
-        day = v.split("updated_at\:\s")[1]
-        puts values[count][0] + " : " + day
-        count += 1
-      end
-    end
-when Net::HTTPRedirection
-  puts("Redirection: code=#{response.code} message=#{response.message}")
-else
-  puts("HTTP ERROR: code=#{response.code} message=#{response.message}")
-end
-
-rescue IOError => e
-  puts(e.message)
-rescue TimeoutError => e
-  puts(e.message)
-rescue JSON::ParserError => e
-  puts(e.message)
-rescue => e
-  puts(e.message)
-end
-=end
+options = { :address              => "smtp.gmail.com",
+            :port                 => 587,
+            :domain               => "smtp.gmail.com",
+            :user_name            => 'takeshima1092@gmail.com',
+            :password             => ARGV[0].to_s,
+            :authentication       => :plain,
+            :enable_starttls_auto => true  }
+mail.delivery_method(:smtp,options)
+mail.deliver!

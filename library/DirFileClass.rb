@@ -132,7 +132,7 @@ class DirFile
 		end
 		File.open("#{path}#{fileName}", mode) { |file|
 			for i in 0 .. array.size()-1 do
-				file.write array[i]
+				file.write array[i].to_s + "\n"
 			end
 		}
 	end

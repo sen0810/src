@@ -5,6 +5,9 @@ require './library/FileIO.rb'
 require './library/MathFunc.rb'
 require './library/DirFileClass.rb'
 require 'fileutils'
+def getMean(array)
+	return array.inject(0.0){|r,i| r+=i }/array.size
+end
 @labelArray = []
 @maxLoc = []
 def main(fileName,path)
@@ -17,34 +20,39 @@ def main(fileName,path)
 	labelAFreq = 5
 	labelBFreq = 10
 	flio = FileIO.new(fileName)
-	data = flio.getFileString(axisIndex,false)
+	data = flio.getFileString(axisIndex)
 	math = MathFunc.new()
-	rd = math.thresholdFilter(data,1.5)
+	#rd = math.thresholdFilter(data,1.5)
 	fft = FFT.new(windowWidth,slideWidth,windowName)
 	fs = fft.samplingFreqency
 	freqArray = []
 	fN = fileName.split("/")
 	fN = fN[fN.size-1]
 	freqArray[0] = ['#targetfile:$(projectRoot)/' + path +"#{fN}"]
-	if(rd[0] != nil) then
-		data = []
-		for v in rd do
-			if(data.size < v.size) then
-				data = v
-			end
-		end
+	labelADiffMean = []
+	labelBDiffMean = []
+	labelAMean = [0]
+	labelBMean =[0]
+	tempA = []
+	tempB = []
+	if(true) then
 		result = fft.fourieTrans(data)
 		bf = 0.0
 		af = 0.0
 		afc = 0.0
 		bfc = 0.0
+		aflg = false
+		bflg = false
+		preA = 0.0
+		preB = 0.0
 		for i in 1 .. result.size() do
 			freq = []
 			leng = result[i-1].size() / 2
 			meanF = 0.0
 			count = 0.0
 			labelAF = 0
-			labelBF = 0 
+			labelBF = 0
+			mean = 0.0
 			for j in 2 .. leng do
 				val = result[i-1][j-1][0]**2 + result[i-1][j-1][1]**2
 				val = val**0.5
@@ -57,33 +65,68 @@ def main(fileName,path)
 				if(f >= labelAFreq-1 and f <= labelAFreq+1) then
 					af += val
 					afc += 1
+
 					if(val > labelAF) then
 						labelAF = val
 					end
 				elsif(f >= labelBFreq-1 and f <= labelBFreq+1) then
 					bf += val
 					bfc += 1
+
 					if(val > labelBF) then
 						labelBF = val
+
 					end
 				end
 			end
 			meanF /= count
+			mean = getMean(labelAMean)
+			if(labelAF-mean > 10) then
+				aflg = true
+			end
+			if(tempA.size < 20) then
+				tempA[tempA.size] = labelAF
+			else
+				tempA[tempA.size] = labelAF
+				labelADiffMean[labelADiffMean.size] = getMean(tempA) - preA
+				preA = getMean(tempA)
+				labelAMean[labelAMean.size] = getMean(tempA)
+				tempA.delete_at(0)
+				#tempA = []
+			end
+			mean = getMean(labelBMean)
+			if(labelBF-mean > 10) then
+				bflg = true
+			end
+			if(tempB.size < 20) then
+				tempB[tempB.size] = labelBF
+			else
+				tempB[tempB.size] = labelBF
+				labelBDiffMean[labelBDiffMean.size] = getMean(tempB) - preB
+				preB = getMean(tempB)
+				labelBMean[labelBMean.size] = getMean(tempB)
+				tempB.delete_at(0)
+				#tempB = []
+			end
 			#180
 			test = 0
-			if(labelAF > 85) then
+			if(aflg)then#labelAF > 85) then
 				freqArray[freqArray.size] = data[slideWidth*(i-1)][0],data[slideWidth*(i-1) + windowWidth][0],"A",labelAF.to_i,meanF.to_i
 				test += 1
 			end
 			#180
-			if(labelBF > 35) then
+			if(bflg) then#labelBF > 35) then
 				freqArray[freqArray.size] = data[slideWidth*(i-1)][0],data[slideWidth*(i-1) + windowWidth][0],"B",labelBF.to_i,meanF.to_i
 				test += 1
 			end
-			if(test == 2) then
-				flio.writeFile(freq,"#{path}\\#{fileName.split("/")[1]}-#{i}.csv","w")
-			end
 		end
+		adiff = getMean(labelADiffMean)
+		bdiff = getMean(labelBDiffMean)
+		puts "#{fileName} /\t#{adiff},#{bdiff}"
+		dirC = DirFile.new(nil)
+		dirC.writeFile("#{path}\\#{fileName.split("/")[4]}-spA.csv",labelADiffMean,"w")
+		dirC.writeFile("#{path}\\#{fileName.split("/")[4]}-spB.csv",labelBDiffMean,"w")
+
 	else
 		puts fileName
 	end
@@ -94,7 +137,7 @@ fileName = ARGV[0].to_s
 dirC = DirFile.new(nil)
 fileNameList = dirC.getDirFileEx("#{fileName}",".csv")
 for val in fileNameList do
-	if(val.include?("lowpass") and !val.include?("label")) then
+	if(val.include?("lowpass") and !val.include?("label") and !val.include?("sp")) then
 		tmp = val.split("/")
 		name = ""
 		path = ""
@@ -110,13 +153,15 @@ for val in fileNameList do
 		flio.writeFile(result,"#{path}\\#{e}.label","w")
 	end
 end
+
+
 =begin
 flio = FileIO.new("#{path}\\#{fileName}.label")
 flio.writeFile(result,"#{path}\\#{fileName}.label","w")
 puts "#{path}\\#{fileName}.label"
 
-	
-	
+
+
 
 
 if(ARGV[4].to_s!="rotate" and ARGV[5].to_s != "pca") then
