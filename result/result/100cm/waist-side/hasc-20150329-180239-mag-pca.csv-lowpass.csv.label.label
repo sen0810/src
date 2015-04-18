@@ -1,2 +1,4 @@
-#targetfile:$(projectRoot)/hascData/result/100cm/waist-side/hasc-20150329-180239-mag-pca.csv-lowpass.csv
-1427619770.89,1427619773.85,通過
+#targetfile:$(projectRoot)/result/result/100cm/waist-side/hasc-20150329-180239-mag-pca.csv-lowpass.csv
+1427619769.93,1427619770.41,A
+1427619770.41,1427619778.97,C
+1427619778.97,1427619778.97,B

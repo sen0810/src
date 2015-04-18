@@ -84,7 +84,7 @@ def main(fileName,path)
 			if(labelAF-mean > 10) then
 				aflg = true
 			end
-			if(tempA.size < 20) then
+			if(tempA.size < 10) then
 				tempA[tempA.size] = labelAF
 			else
 				tempA[tempA.size] = labelAF
@@ -98,7 +98,7 @@ def main(fileName,path)
 			if(labelBF-mean > 10) then
 				bflg = true
 			end
-			if(tempB.size < 20) then
+			if(tempB.size < 10) then
 				tempB[tempB.size] = labelBF
 			else
 				tempB[tempB.size] = labelBF
@@ -124,8 +124,8 @@ def main(fileName,path)
 		bdiff = getMean(labelBDiffMean)
 		puts "#{fileName} /\t#{adiff},#{bdiff}"
 		dirC = DirFile.new(nil)
-		dirC.writeFile("#{path}\\#{fileName.split("/")[4]}-spA.csv",labelADiffMean,"w")
-		dirC.writeFile("#{path}\\#{fileName.split("/")[4]}-spB.csv",labelBDiffMean,"w")
+		dirC.writeFile("#{path}\\#{fileName.split("/")[4]}-spA.csv",labelAMean,"w")
+		dirC.writeFile("#{path}\\#{fileName.split("/")[4]}-spB.csv",labelBMean,"w")
 
 	else
 		puts fileName

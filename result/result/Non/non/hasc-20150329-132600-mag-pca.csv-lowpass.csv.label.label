@@ -1,1 +1,4 @@
-#targetfile:$(projectRoot)/hascData/result/Non/non/hasc-20150329-132600-mag-pca.csv-lowpass.csv
+#targetfile:$(projectRoot)/result/result/Non/non/hasc-20150329-132600-mag-pca.csv-lowpass.csv
+1427603170.71,1427603171.95,A
+1427603171.95,1427603173.47,C
+1427603173.47,1427603173.47,B
