@@ -136,6 +136,21 @@ class DirFile
 			end
 		}
 	end
+
+	def writeCSVFile(fileName,array,mode)
+		path = ""
+		if(@path != nil) then
+			path = "#{@path}/"
+		end
+		if(mode == nil) then
+			mode = 'w'
+		end
+		File.open("#{path}#{fileName}", mode) { |file|
+			for i in 0 .. array.size()-1 do
+				file.write array[i].join(",") + "\n"
+			end
+		}
+	end
 	#ファイルを読み込んで第2引数の文字が含まれた文字列だけを配列で返す
 	#サイズの大きいファイルを読み込む時用
 	def getFileStringEx(fileName,str)
