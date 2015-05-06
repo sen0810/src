@@ -16,7 +16,8 @@ def main(fileName,path)
 	slideWidth = ARGV[3].to_i
 	axis = ARGV[4].to_s
 #	mode = ARGV[5].to_s
-	axisIndex = 1
+dirC = DirFile.new(nil)
+	axisIndex = 2
 	labelAFreq = 5
 	labelBFreq = 10
 	flio = FileIO.new(fileName)
@@ -45,8 +46,10 @@ def main(fileName,path)
 		bflg = false
 		preA = 0.0
 		preB = 0.0
+
 		for i in 1 .. result.size() do
 			freq = []
+			freqA = []
 			leng = result[i-1].size() / 2
 			meanF = 0.0
 			count = 0.0
@@ -57,6 +60,7 @@ def main(fileName,path)
 				val = result[i-1][j-1][0]**2 + result[i-1][j-1][1]**2
 				val = val**0.5
 				f = (j-1.0)*fs/windowWidth
+				freqA[freqA.size] = [f,val]
 				freq[freq.size] = [BigDecimal(f.to_s).floor(1).to_f,val.to_i]
 				if(f > 3 and f < 25) then
 					meanF += val
@@ -79,6 +83,11 @@ def main(fileName,path)
 					end
 				end
 			end
+			tes = []
+			for x in 0 .. freqA.size-1 do
+				tes[tes.size] = freqA[x].join(",")
+			end
+			dirC.writeFile("#{path}\\#{j}.csv",freqA,"a")
 			meanF /= count
 			mean = getMean(labelAMean)
 			if(labelAF-mean > 10) then
@@ -123,7 +132,7 @@ def main(fileName,path)
 		adiff = getMean(labelADiffMean)
 		bdiff = getMean(labelBDiffMean)
 		puts "#{fileName} /\t#{adiff},#{bdiff}"
-		dirC = DirFile.new(nil)
+
 		dirC.writeFile("#{path}\\#{fileName.split("/")[4]}-spA.csv",labelAMean,"w")
 		dirC.writeFile("#{path}\\#{fileName.split("/")[4]}-spB.csv",labelBMean,"w")
 
@@ -137,7 +146,8 @@ fileName = ARGV[0].to_s
 dirC = DirFile.new(nil)
 fileNameList = dirC.getDirFileEx("#{fileName}",".csv")
 for val in fileNameList do
-	if(val.include?("lowpass") and !val.include?("label") and !val.include?("sp")) then
+	#val.include?("lowpass") and
+	if(!val.include?("label") and !val.include?("sp")) then
 		tmp = val.split("/")
 		name = ""
 		path = ""

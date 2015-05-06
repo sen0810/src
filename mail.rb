@@ -7,6 +7,7 @@ dirC = DirFile.new(nil)
 data = dirC.getFileString("novelData.csv")
 for v in data do
   #title,nCode,epSum =
+  v = v.force_encoding("utf-8")
   values[values.size] = v.split(",")
 end
 ncodes = ""
